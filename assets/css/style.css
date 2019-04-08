@@ -1,0 +1,13 @@
+table tr td {
+    padding:10px;
+}
+
+.card-header {
+    background:rgb(111, 138, 230);
+    color: white;
+}
+
+.card-body {
+    background:#eee;
+ 
+}
