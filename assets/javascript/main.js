@@ -1,20 +1,40 @@
 
+
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyBCREs1yNjAQ8CGj-PZVTL-e1F7g-rsRDY",
+    authDomain: "trainspottings-c747b.firebaseapp.com",
+    databaseURL: "https://trainspottings-c747b.firebaseio.com",
+    projectId: "trainspottings-c747b",
+    storageBucket: "",
+    messagingSenderId: "191751232305"
+};
+firebase.initializeApp(config);
+var database = firebase.database();
+
+$(document).ready(function () {
+    $("#btnSubmit").click(HandleSubmit);
+
+    OnDBChange();
+});
+
 var trainCollection = [];
 
 
-
-
-$(document).ready(function() {
-    $("#btnSubmit").click(HandleSubmit);
-
-});
-
-
+function OnDBChange() {
+    database.ref().on("value", function (snapshot) {
+        console.log(snapshot.val());
+        // clickCounter = snapshot.val().clickCount;
+       
+    }, function (errorObject) {
+        console.log("The read failed: " + errorObject.code);
+    });
+}
 
 function HandleSubmit(event) {
     event.preventDefault();
 
-    
+
     var trainName = $("#TrainName").val().trim();
     var destination = $("#Destination").val().trim();
     var frequency = $("#Frequency").val().trim();
@@ -31,6 +51,13 @@ function HandleSubmit(event) {
     trainCollection.push(tempTrain);
     Display(tempTrain);
 
+    database.ref().set({
+        name: tempTrain.name,
+        dest: tempTrain.dest,
+        freq: tempTrain.freq,
+        next: tempTrain.next,
+        minsAway:tempTrain.minsAway
+    });
 
     function Display(train) {
         console.log("Train: " + train.name);
@@ -57,3 +84,8 @@ function HandleSubmit(event) {
 
     }
 }
+
+
+
+
+
