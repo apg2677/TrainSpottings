@@ -15,7 +15,8 @@ var database = firebase.database();
 $(document).ready(function () {
     $("#btnSubmit").click(HandleSubmit);
 
-    OnDBChange();
+    InitTable();
+     OnDBChange();
 });
 
 var trainCollection = [];
@@ -24,8 +25,15 @@ var trainCollection = [];
 function OnDBChange() {
     database.ref().on("value", function (snapshot) {
         console.log(snapshot.val());
-        // clickCounter = snapshot.val().clickCount;
-       // Display();
+        // database.ref().push({
+        //     name: tempTrain.name,
+        //     dest: tempTrain.dest,
+        //     first: tempTrain.first,
+        //     freq: tempTrain.freq,
+        //     next: tempTrain.next,
+        //     minsAway: tempTrain.minsAway
+        // });
+
     }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
     });
@@ -42,7 +50,7 @@ function HandleSubmit(event) {
     var testArrival = AddMins(firstTrain, frequency);
     var nextArrival = TimeConverter(testArrival);
 
-   
+
     var minutesAway = 5;
     var tempTrain = {
         name: trainName,
@@ -55,7 +63,7 @@ function HandleSubmit(event) {
     trainCollection.push(tempTrain);
     Display(tempTrain);
 
-    database.ref().set({
+    database.ref().push({
         name: tempTrain.name,
         dest: tempTrain.dest,
         first: tempTrain.first,
@@ -94,21 +102,21 @@ function TimeConverter(time) {
     timeArray = time.split(':');
     var hours = Number(timeArray[0]);
     var mins = Number(timeArray[1]);
-    
+
     var timeValue;
 
     if (hours > 0 && hours <= 12) {
         timeValue = "" + hours;
     }
     else if (hours > 12) {
-        timeValue="" + (hours-12);
+        timeValue = "" + (hours - 12);
     }
-    else if (hours==0) {
-        timeValue="12";
+    else if (hours == 0) {
+        timeValue = "12";
     }
 
     timeValue += (mins < 10) ? ":0" + mins : ":" + mins;
-    timeValue += (hours>=12)? " P.M." : " A.M.";
+    timeValue += (hours >= 12) ? " P.M." : " A.M.";
 
     return timeValue;
 }
@@ -119,10 +127,13 @@ function AddMins(time, freq) {
     var mins = temptime[1];
     newMins = parseInt(mins) + parseInt(freq);
     newTime = hours + ":" + newMins;
-    return newTime; 
+    return newTime;
 
 }
 
+function InitTable() {
+
+}
 
 
 
