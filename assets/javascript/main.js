@@ -25,7 +25,7 @@ function OnDBChange() {
     database.ref().on("value", function (snapshot) {
         console.log(snapshot.val());
         // clickCounter = snapshot.val().clickCount;
-        Display()
+       // Display();
     }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
     });
@@ -34,29 +34,20 @@ function OnDBChange() {
 function HandleSubmit(event) {
     event.preventDefault();
 
-
     var trainName = $("#TrainName").val().trim();
     var destination = $("#Destination").val().trim();
     var firstTrain = $("#firstTrain").val().trim();
     firstTrainRT = TimeConverter(firstTrain);
-
-    console.log(firstTrainRT);
     var frequency = $("#Frequency").val().trim();
-
-
-    // var nextArrival = $("#NextArrival").val().trim();
     var testArrival = AddMins(firstTrain, frequency);
-    console.log("Test Arrival: " + testArrival);
     var nextArrival = TimeConverter(testArrival);
 
-    console.log("Next Arrival: " + nextArrival);
-
-    // var minutesAway = $("#MinutesAway").val().trim();
+   
     var minutesAway = 5;
     var tempTrain = {
         name: trainName,
         dest: destination,
-        first: firstTrain,
+        first: firstTrainRT,
         freq: frequency,
         next: nextArrival,
         minsAway: minutesAway
@@ -102,12 +93,8 @@ function HandleSubmit(event) {
 function TimeConverter(time) {
     timeArray = time.split(':');
     var hours = Number(timeArray[0]);
-    
-    console.log("hours: " + hours);
-    console.log("Time Converter: Hours: " + hours);
-    
     var mins = Number(timeArray[1]);
-    console.log("Time Converter: Mins: "+ mins);
+    
     var timeValue;
 
     if (hours > 0 && hours <= 12) {
