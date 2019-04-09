@@ -25,7 +25,7 @@ function OnDBChange() {
     database.ref().on("value", function (snapshot) {
         console.log(snapshot.val());
         // clickCounter = snapshot.val().clickCount;
-       
+        Display()
     }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
     });
@@ -37,13 +37,21 @@ function HandleSubmit(event) {
 
     var trainName = $("#TrainName").val().trim();
     var destination = $("#Destination").val().trim();
-    var frequency = $("#Frequency").val().trim();
-    var nextArrival = $("#NextArrival").val().trim();
-    var minutesAway = $("#MinutesAway").val().trim();
+    var firstTrain = $("#firstTrain").val().trim();
+    firstTrainRT = TimeConverter(firstTrain);
 
+    console.log(firstTrainRT);
+    var frequency = $("#Frequency").val().trim();
+
+
+    // var nextArrival = $("#NextArrival").val().trim();
+    var nextArrival = "12:00PM"
+    // var minutesAway = $("#MinutesAway").val().trim();
+    var minutesAway = 5;
     var tempTrain = {
         name: trainName,
         dest: destination,
+        first: firstTrain,
         freq: frequency,
         next: nextArrival,
         minsAway: minutesAway
@@ -54,9 +62,10 @@ function HandleSubmit(event) {
     database.ref().set({
         name: tempTrain.name,
         dest: tempTrain.dest,
+        first: tempTrain.first,
         freq: tempTrain.freq,
         next: tempTrain.next,
-        minsAway:tempTrain.minsAway
+        minsAway: tempTrain.minsAway
     });
 
     function Display(train) {
@@ -83,6 +92,29 @@ function HandleSubmit(event) {
         trainTable.append(newRow);
 
     }
+
+}
+function TimeConverter(time) {
+    timeArray = time.split(':');
+    var hours = Number(time[0]);
+    var mins = Number(time[1]);
+
+    var timeValue;
+
+    if (hours > 0 && hours <= 12) {
+        timeValue = "" + hours;
+    }
+    else if (hours > 12) {
+        timeValue="" + (hours-12);
+    }
+    else if (hours==0) {
+        timeValue="12";
+    }
+
+    timeValue += (mins < 10) ? ":0" + mins : ":" + mins;
+    timeValue += (hours>=12)? " P.M." : " A.M.";
+
+    return timeValue;
 }
 
 
