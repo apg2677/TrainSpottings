@@ -45,7 +45,12 @@ function HandleSubmit(event) {
 
 
     // var nextArrival = $("#NextArrival").val().trim();
-    var nextArrival = "12:00PM"
+    var testArrival = AddMins(firstTrain, frequency);
+    console.log("Test Arrival: " + testArrival);
+    var nextArrival = TimeConverter(testArrival);
+
+    console.log("Next Arrival: " + nextArrival);
+
     // var minutesAway = $("#MinutesAway").val().trim();
     var minutesAway = 5;
     var tempTrain = {
@@ -96,9 +101,13 @@ function HandleSubmit(event) {
 }
 function TimeConverter(time) {
     timeArray = time.split(':');
-    var hours = Number(time[0]);
-    var mins = Number(time[1]);
-
+    var hours = Number(timeArray[0]);
+    
+    console.log("hours: " + hours);
+    console.log("Time Converter: Hours: " + hours);
+    
+    var mins = Number(timeArray[1]);
+    console.log("Time Converter: Mins: "+ mins);
     var timeValue;
 
     if (hours > 0 && hours <= 12) {
@@ -115,6 +124,16 @@ function TimeConverter(time) {
     timeValue += (hours>=12)? " P.M." : " A.M.";
 
     return timeValue;
+}
+
+function AddMins(time, freq) {
+    temptime = time.split(':');
+    var hours = temptime[0];
+    var mins = temptime[1];
+    newMins = parseInt(mins) + parseInt(freq);
+    newTime = hours + ":" + newMins;
+    return newTime; 
+
 }
 
 
