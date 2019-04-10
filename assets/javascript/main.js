@@ -23,8 +23,9 @@ var trainCollection = [];
 
 
 function OnDBChange() {
-    database.ref().on("value", function (snapshot) {
-        console.log(snapshot.val());
+    database.ref().on("child_added", function (childSnapshot) {
+        var tempSchedule = childSnapshot.val();
+        console.log(childSnapshot.val());
         // database.ref().push({
         //     name: tempTrain.name,
         //     dest: tempTrain.dest,
@@ -41,6 +42,12 @@ function OnDBChange() {
 
 function HandleSubmit(event) {
     event.preventDefault();
+    // TEST 
+    var now = moment().format("HH:mm");
+    console.log("time test: " + now);
+    var testAddMins = moment().add(25, 'm');
+    var testAddMins2 = moment(testAddMins).format("HH:mm");
+    console.log("Added Mins: " + testAddMins2);
 
     var trainName = $("#TrainName").val().trim();
     var destination = $("#Destination").val().trim();
