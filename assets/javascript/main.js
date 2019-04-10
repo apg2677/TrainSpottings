@@ -42,29 +42,24 @@ function OnDBChange() {
 
 function HandleSubmit(event) {
     event.preventDefault();
-    // TEST 
-    var now = moment().format("HH:mm");
-    console.log("time test: " + now);
-    var testAddMins = moment().add(25, 'm');
-    var testAddMins2 = moment(testAddMins).format("HH:mm");
-    console.log("Added Mins: " + testAddMins2);
 
     var trainName = $("#TrainName").val().trim();
     var destination = $("#Destination").val().trim();
     var firstTrain = $("#firstTrain").val().trim();
-    firstTrainRT = TimeConverter(firstTrain);
-    var frequency = $("#Frequency").val().trim();
-    var testArrival = AddMins(firstTrain, frequency);
-    var nextArrival = TimeConverter(testArrival);
+    var frequency = parseInt($("#Frequency").val().trim());
 
+    var tempTime = moment(firstTrain, "HH:mm");
+    console.log("Temp train: " + tempTime.format("h:mm"));
+    var nextArrival = tempTime.add(frequency, 'm');
+    console.log("Next Arrival: " + nextArrival.format("h:mm"));
 
     var minutesAway = 5;
     var tempTrain = {
         name: trainName,
         dest: destination,
-        first: firstTrainRT,
+        first: tempTime.format("h:mm"),
         freq: frequency,
-        next: nextArrival,
+        next: nextArrival.format("h:mm"),
         minsAway: minutesAway
     };
     trainCollection.push(tempTrain);
