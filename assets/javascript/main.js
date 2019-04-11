@@ -16,29 +16,29 @@ $(document).ready(function () {
     $("#btnSubmit").click(HandleSubmit);
 
     InitTable();
-     OnDBChange();
+    // OnDBChange();
 });
 
 var trainCollection = [];
 
 
-function OnDBChange() {
-    database.ref().on("child_added", function (childSnapshot) {
-        var tempSchedule = childSnapshot.val();
-        console.log(childSnapshot.val());
-        // database.ref().push({
-        //     name: tempTrain.name,
-        //     dest: tempTrain.dest,
-        //     first: tempTrain.first,
-        //     freq: tempTrain.freq,
-        //     next: tempTrain.next,
-        //     minsAway: tempTrain.minsAway
-        // });
+// function OnDBChange() {
+//     database.ref().on("child_added", function (childSnapshot) {
+//         var tempSchedule = childSnapshot.val();
+//         console.log(childSnapshot.val());
+//         // database.ref().push({
+//         //     name: tempTrain.name,
+//         //     dest: tempTrain.dest,
+//         //     first: tempTrain.first,
+//         //     freq: tempTrain.freq,
+//         //     next: tempTrain.next,
+//         //     minsAway: tempTrain.minsAway
+//         // });
 
-    }, function (errorObject) {
-        console.log("The read failed: " + errorObject.code);
-    });
-}
+//     }, function (errorObject) {
+//         console.log("The read failed: " + errorObject.code);
+//     });
+// }
 
 function HandleSubmit(event) {
     event.preventDefault();
@@ -70,7 +70,7 @@ function HandleSubmit(event) {
         minsAway: minutesAway
     };
     trainCollection.push(tempTrain);
-    Display(tempTrain);
+    // Display(tempTrain);
 
     database.ref().push({
         name: tempTrain.name,
@@ -146,9 +146,10 @@ function AddTableRow(train) {
 // }
 
 function InitTable() {
+
     database.ref().on("value", function (snapshot) {
         console.log("Init: " + snapshot.val());
-
+        $("#trainTable").empty();
         snapshot.forEach(function(data) {
             var val = data.val();
             console.log("name:  "+ val.name);
