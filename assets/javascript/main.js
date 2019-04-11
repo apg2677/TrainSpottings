@@ -82,24 +82,28 @@ function HandleSubmit(event) {
         console.log("Minutes Away: " + train.minsAway);
         console.log(trainCollection);
 
-        var trainTable = $("#trainTable");
-        var newRow = $("<tr>");
-        var newCol1 = $("<td>");
-        newCol1.text(train.name);
-        var newCol2 = $("<td>");
-        newCol2.text(train.dest);
-        var newCol3 = $("<td>");
-        newCol3.text(train.freq);
-        var newCol4 = $("<td>");
-        newCol4.text(train.next);
-        var newCol5 = $("<td>");
-        newCol5.text(train.minsAway);
-        newRow.append(newCol1).append(newCol2).append(newCol3).append(newCol4).append(newCol5);
-        trainTable.append(newRow);
+        AddTableRow(train);
 
     }
 
 }
+function AddTableRow(train) {
+    var trainTable = $("#trainTable");
+    var newRow = $("<tr>");
+    var newCol1 = $("<td>");
+    newCol1.text(train.name);
+    var newCol2 = $("<td>");
+    newCol2.text(train.dest);
+    var newCol3 = $("<td>");
+    newCol3.text(train.freq);
+    var newCol4 = $("<td>");
+    newCol4.text(train.next);
+    var newCol5 = $("<td>");
+    newCol5.text(train.minsAway);
+    newRow.append(newCol1).append(newCol2).append(newCol3).append(newCol4).append(newCol5);
+    trainTable.append(newRow);
+}
+
 function TimeConverter(time) {
     timeArray = time.split(':');
     var hours = Number(timeArray[0]);
@@ -134,6 +138,15 @@ function AddMins(time, freq) {
 }
 
 function InitTable() {
+    database.ref().on("value", function (snapshot) {
+        console.log("Init: " + snapshot.val());
+
+        snapshot.forEach(function(data) {
+            var val = data.val();
+            console.log("name:  "+ val.name);
+            AddTableRow(val);
+        })
+    }); 
 
 }
 
