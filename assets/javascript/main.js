@@ -53,12 +53,19 @@ function HandleSubmit(event) {
     var nextArrival = tempTime.add(frequency, 'm');
     console.log("Next Arrival: " + nextArrival.format("h:mm"));
 
+    // CREATE A TABLE OF TIMES FOR EACH TRAIN  
+    var tableArray = [];
+
+    tableArray = GetTimeTable(tempTime, frequency);
+    console.log("Time Table: " + tableArray);
+
     var minutesAway = 5;
     var tempTrain = {
         name: trainName,
         dest: destination,
         first: tempTime.format("h:mm"),
         freq: frequency,
+        timeTable: tableArray,
         next: nextArrival.format("h:mm"),
         minsAway: minutesAway
     };
@@ -70,6 +77,7 @@ function HandleSubmit(event) {
         dest: tempTrain.dest,
         first: tempTrain.first,
         freq: tempTrain.freq,
+        times: tempTrain.timeTable,
         next: tempTrain.next,
         minsAway: tempTrain.minsAway
     });
@@ -104,38 +112,38 @@ function AddTableRow(train) {
     trainTable.append(newRow);
 }
 
-function TimeConverter(time) {
-    timeArray = time.split(':');
-    var hours = Number(timeArray[0]);
-    var mins = Number(timeArray[1]);
+// function TimeConverter(time) {
+//     timeArray = time.split(':');
+//     var hours = Number(timeArray[0]);
+//     var mins = Number(timeArray[1]);
 
-    var timeValue;
+//     var timeValue;
 
-    if (hours > 0 && hours <= 12) {
-        timeValue = "" + hours;
-    }
-    else if (hours > 12) {
-        timeValue = "" + (hours - 12);
-    }
-    else if (hours == 0) {
-        timeValue = "12";
-    }
+//     if (hours > 0 && hours <= 12) {
+//         timeValue = "" + hours;
+//     }
+//     else if (hours > 12) {
+//         timeValue = "" + (hours - 12);
+//     }
+//     else if (hours == 0) {
+//         timeValue = "12";
+//     }
 
-    timeValue += (mins < 10) ? ":0" + mins : ":" + mins;
-    timeValue += (hours >= 12) ? " P.M." : " A.M.";
+//     timeValue += (mins < 10) ? ":0" + mins : ":" + mins;
+//     timeValue += (hours >= 12) ? " P.M." : " A.M.";
 
-    return timeValue;
-}
+//     return timeValue;
+// }
 
-function AddMins(time, freq) {
-    temptime = time.split(':');
-    var hours = temptime[0];
-    var mins = temptime[1];
-    newMins = parseInt(mins) + parseInt(freq);
-    newTime = hours + ":" + newMins;
-    return newTime;
+// function AddMins(time, freq) {
+//     temptime = time.split(':');
+//     var hours = temptime[0];
+//     var mins = temptime[1];
+//     newMins = parseInt(mins) + parseInt(freq);
+//     newTime = hours + ":" + newMins;
+//     return newTime;
 
-}
+// }
 
 function InitTable() {
     database.ref().on("value", function (snapshot) {
@@ -149,6 +157,14 @@ function InitTable() {
     }); 
 
 }
+
+function GetTimeTable(first, freq) {
+    var tempArr = [];
+    for (var i=0;i<5;i++) {
+        tempArr.push(first.add(freq, 'm').format("h:mm"));
+    }
+    return tempArr;
+};
 
 
 
