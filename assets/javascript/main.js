@@ -21,7 +21,7 @@ $(document).ready(function () {
 
 var trainCollection = [];
 
-
+var trainTable;
 // function OnDBChange() {
 //     database.ref().on("child_added", function (childSnapshot) {
 //         var tempSchedule = childSnapshot.val();
@@ -96,7 +96,7 @@ function HandleSubmit(event) {
 
 }
 function AddTableRow(train) {
-    var trainTable = $("#trainTable");
+    trainTable = $("#trainTable");
     var newRow = $("<tr>");
     var newCol1 = $("<td>");
     newCol1.text(train.name);
@@ -149,7 +149,7 @@ function InitTable() {
 
     database.ref().on("value", function (snapshot) {
         console.log("Init: " + snapshot.val());
-        $("#trainTable").empty();
+       
         snapshot.forEach(function(data) {
             var val = data.val();
             console.log("name:  "+ val.name);
@@ -160,10 +160,17 @@ function InitTable() {
 }
 
 function GetTimeTable(first, freq) {
-    var tempArr = [];
-    for (var i=0;i<5;i++) {
-        tempArr.push(first.add(freq, 'm').format("h:mm"));
+    var tempArr = [first.format("HH:mm")];
+    console.log("First Entry: " + tempArr[0]);
+    var i=0;
+    while (i<5){
+        tempArr.push(first.add(freq, 'm').format("HH:mm"));
+        i++;
+        console.log("Start time: " + tempArr[0]);
+        console.log("New time: " + tempArr[i-1])
     }
+        
+    
     return tempArr;
 };
 
