@@ -149,7 +149,7 @@ function InitTable() {
 
     database.ref().on("value", function (snapshot) {
         console.log("Init: " + snapshot.val());
-       
+        $("tbody").empty();
         snapshot.forEach(function(data) {
             var val = data.val();
             console.log("name:  "+ val.name);
