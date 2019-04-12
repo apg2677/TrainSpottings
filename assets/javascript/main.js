@@ -49,9 +49,9 @@ function HandleSubmit(event) {
     var frequency = parseInt($("#Frequency").val().trim());
 
     var tempTime = moment(firstTrain, "HH:mm");
-    console.log("Temp train: " + tempTime.format("h:mm"));
+   // console.log("Temp train: " + tempTime.format("h:mm"));
     var nextArrival = tempTime.add(frequency, 'm');
-    console.log("Next Arrival: " + nextArrival.format("h:mm"));
+  //  console.log("Next Arrival: " + nextArrival.format("h:mm"));
 
     // CREATE A TABLE OF TIMES FOR EACH TRAIN  
     var tableArray = [];
@@ -148,32 +148,58 @@ function AddTableRow(train) {
 function InitTable() {
 
     database.ref().on("value", function (snapshot) {
-        console.log("Init: " + snapshot.val());
+       // console.log("Init: " + snapshot.val());
         $("tbody").empty();
         snapshot.forEach(function(data) {
             var val = data.val();
-            console.log("name:  "+ val.name);
+         //   console.log("name:  "+ val.name);
             AddTableRow(val);
         })
     }); 
+    Test();
 
 }
 
 function GetTimeTable(first, freq) {
     var tempArr = [first.format("HH:mm")];
     console.log("First Entry: " + tempArr[0]);
+    console.log("Full date first : " + first.format("MM-DD-YYYY HH:mm"));
+    var endDate = moment(first.add(2, 'days'));
+    console.log("End date: " + endDate.format("MM-DD-YYYY HH:mm"));
     var i=0;
-    while (i<5){
+    
+    // console.log("Bool Test: " + boolTest);
+    while (i<5) {
+        var tempTime = first.add(freq, "m");
+        console.log("Temp Time: " + tempTime);
+
+        var boolTest = Test(tempTime, first, endDate);
+        console.log("Bool Test: " + boolTest);
         tempArr.push(first.add(freq, 'm').format("HH:mm"));
         i++;
-        console.log("Start time: " + tempArr[0]);
-        console.log("New time: " + tempArr[i-1])
+        //console.log("Start time: " + tempArr[0]);
+        // var start = moment(tempArr[0]);
+       //  console.log("start: " + start);
+       //  console.log("New time: " + tempArr[i-1])
+        var diffTime = moment(tempArr[0]).diff(moment(tempArr[i]));
+
+        // console.log("Diff: " + diffTime);
+
     }
         
     
     return tempArr;
 };
 
-
+function Test(t, s, e ) {
+    var startDate = moment(s , "MM-DD-YYYY HH:mm");
+    console.log("Start Date: " + startDate.format("MM-DD-YYYY HH:mm"));
+    var endDate = moment(e, "MM-DD-YYYY HH:mm");
+    console.log("End Date: " + endDate.format("MM-DD-YYYY HH:mm"))
+    var current = moment(t, "MM-DD-YYYY HH:mm");
+    console.log("Current: " + current.format("MM-DD-YYYY HH:mm"));
+    var boolTest = current.isBetween(startDate, endDate);
+    console.log("Test: " + boolTest);
+}
 
 
